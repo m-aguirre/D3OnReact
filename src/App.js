@@ -1,8 +1,17 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
+import OutlierDetector from './OutlierDetector.js';
+import aaplData from './dataFile.js';
 
 class App extends Component {
+  
+  show() {
+    var data = aaplData.aaplData;
+    console.log(data);
+     var graph = new OutlierDetector(data);
+     graph.plotDataPoints();
+  }
   render() {
     return (
       <div className="App">
@@ -11,8 +20,9 @@ class App extends Component {
           <h1 className="App-title">Welcome to React</h1>
         </header>
         <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
+          To
         </p>
+        <button onClick={this.show()}>Identify Outliers</button>
       </div>
     );
   }
