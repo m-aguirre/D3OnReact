@@ -152,41 +152,41 @@ class OutlierDetector {
   }
 
   plotDataPoints() {
-var d3ViewPort =  d3.select('.viewport')
-var svg = d3ViewPort.append('svg')
-var dots = svg.append('g')
-var that = this;
-for (var i = 0; i < this.data.length; i++){
-  var data = []
-  data.push(this.data[i]);
-  dots.append("circle")
-    .data(data)
-    .attr("r", 0)
-    .attr("cx", (d) => { return this.xScale(Date.parse(d.date)) })
-    .attr("cy", (d) => { return this.yScale(d.close) })
-    .attr('close', data[0].close)
-    .attr('date', data[0].date)
-    .attr('outlier', (d) => { return (d.outlier ? true : false)})
-    .on('mouseenter', function() {
-      var dataPoint = d3.select(this);
-      if (dataPoint.attr('outlier') === 'true') {
-        that.showInfo(dataPoint);
-        }
+    var d3ViewPort =  d3.select('.viewport')
+    var svg = d3ViewPort.append('svg')
+    var dots = svg.append('g')
+    var that = this;
+    for (var i = 0; i < this.data.length; i++){
+    var data = []
+    data.push(this.data[i]);
+    dots.append("circle")
+      .data(data)
+      .attr("r", 0)
+      .attr("cx", (d) => { return this.xScale(Date.parse(d.date)) })
+      .attr("cy", (d) => { return this.yScale(d.close) })
+      .attr('close', data[0].close)
+      .attr('date', data[0].date)
+      .attr('outlier', (d) => { return (d.outlier ? true : false)})
+      .on('mouseenter', function() {
+        var dataPoint = d3.select(this);
+        if (dataPoint.attr('outlier') === 'true') {
+          that.showInfo(dataPoint);
+          }
+        })
+        .on("mouseout", function() {
+            d3.select('.viewport')
+            .selectAll('rect').remove()
+            d3.select('.viewport')
+            .selectAll('.outlier-data').remove()
       })
-      .on("mouseout", function() {
-          d3.select('.viewport')
-          .selectAll('rect').remove()
-          d3.select('.viewport')
-          .selectAll('.outlier-data').remove()
-    })
-    .style('stroke', 'black')
-    .style('fill', 'white')
-    .transition()
-    .delay(this.delayFactor * i)
-    .attr("r", 3.5)
-      }
-    setTimeout(() => {this.drawRegressionLine()}, this.millisecondDelay());
-    setTimeout(() => {this.colorOutliersRed(this.data)}, this.millisecondDelay() + 750);
+      .style('stroke', 'black')
+      .style('fill', 'white')
+      .transition()
+      .delay(this.delayFactor * i)
+      .attr("r", 3.5)
+        }
+      setTimeout(() => {this.drawRegressionLine()}, this.millisecondDelay());
+      setTimeout(() => {this.colorOutliersRed(this.data)}, this.millisecondDelay() + 750);
 }
 
 
@@ -225,7 +225,7 @@ for (var i = 0; i < this.data.length; i++){
   var d3ViewPort =  d3.select('.viewport')
   var svg = d3ViewPort.append('svg')
   var rect = svg.append('rect')
-  .attr('width', 115)
+  .attr('width', 125)
   .attr('height', 55)
   .attr('class', 'outlier-info-box')
   .attr('x', cx)
