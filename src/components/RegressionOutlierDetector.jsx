@@ -2,6 +2,7 @@ import React from 'react';
 
 import aaplData from '../dataFile.js';
 import OutlierDetector from '../OutlierDetector.js'
+
 class RegressionOutlierDetector extends React.Component {
   constructor(props) {
     super(props)
@@ -18,7 +19,7 @@ class RegressionOutlierDetector extends React.Component {
   render() {
     return (
       <div>
-        <button onClick={this.show()}>Identify Outliers</button>
+        <button onClick={ () => {this.show()}}>Identify Outliers</button>
 
       </div>
     )

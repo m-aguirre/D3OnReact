@@ -3,3 +3,28 @@ body {
   padding: 0;
   font-family: sans-serif;
 }
+
+.graph-pane {
+  width: 750px;
+  height: 500px;
+  margin: auto;
+  overflow: visible;
+  padding-left: 20px;
+}
+
+.viewport {
+  margin-left: 10%;
+  overflow: visible;
+}
+
+.outlier-info-box {
+  stroke: black;
+  fill: white;
+
+}
+
+.outlier-data {
+  overflow: hidden;
+  color: red;
+  font-size: 14px;
+}

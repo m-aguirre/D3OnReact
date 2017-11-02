@@ -126,7 +126,8 @@ class OutlierDetector {
   }
 
   addViewport() {
-    d3.select('body')
+    d3.select('.viewport').remove();
+    d3.select('.graph-pane')
       .append('svg')
       .attr('class', 'viewport')
       .attr('width', 700)
