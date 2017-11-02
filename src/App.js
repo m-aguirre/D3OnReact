@@ -15,7 +15,10 @@ class App extends Component {
         <p className="App-intro">
 
         </p>
-        <RegressionOutlierDetector />
+        <div className="stock-description">
+          <h2>AAPL 2014</h2>
+          <RegressionOutlierDetector />
+        </div>
         <div className="graph-pane"></div>
         <hr></hr>
         <div className="regression-description">
@@ -37,7 +40,7 @@ class App extends Component {
           <p>
             In the context of stock values, detecting outliers is useful when deciding to buy or sell a stock.
             A multi day succession of outlier closing prices may indicate that a stock is poised to revert to its mean,
-            or that it is approaching a resistance/breakout point, or one of a million other posibilities.
+            or that it is approaching a resistance/breakout point, or one of a million other possibilities.
             Outlier status is only one small part that should go into the decision of buying or selling a stock.
           </p>
 

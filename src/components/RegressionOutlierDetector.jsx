@@ -19,7 +19,7 @@ class RegressionOutlierDetector extends React.Component {
   render() {
     return (
       <div>
-        <button onClick={ () => {this.show()}}>Identify Outliers</button>
+        <button className="animate-button" onClick={ () => {this.show()}}>Identify Outliers</button>
 
       </div>
     )

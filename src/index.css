@@ -4,6 +4,12 @@ body {
   font-family: sans-serif;
 }
 
+.regression-description {
+  width: 70%;
+  height: auto;
+  margin: auto;
+}
+
 .graph-pane {
   width: 750px;
   height: 500px;
@@ -12,6 +18,30 @@ body {
   padding-left: 20px;
 }
 
+
+.stock-description  {
+    width: 400px;
+    height: auto;
+    display: inline-block;
+    text-align: center;
+
+}
+.stock-description h2 {
+  position: relative;
+  display: inline-block;
+  float: left;
+  margin-left: 20px;
+}
+.animate-button {
+  position: relative;
+  margin-top: 15px;
+  display: inline-block;
+  background-color: #41a6f4;
+  color: white;
+  width: 75px;
+  height: 45px;
+  border-radius: 5px;
+}
 .viewport {
   margin-left: 10%;
   overflow: visible;
