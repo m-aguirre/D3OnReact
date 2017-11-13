@@ -8,9 +8,26 @@ class RegressionOutlierDetector extends React.Component {
     super(props)
 
     this.show = this.show.bind(this);
+    this.calculateStartDate = this.calculateStartDate.bind(this);
   }
+
+  calculateStartDate(endDate, daysToSubtract) {
+    var date = new Date(endDate);
+    date.setDate(date.getDate() - daysToSubtract);
+    return new Date(date);
+  }
+
   show(daysToSubtract) {
-    var data = aaplData.aaplData;
+    var sourceData = aaplData.aaplData;
+    var startDate = this.calculateStartDate('2015-01-01', daysToSubtract);
+    var data = [];
+    //TODO add upper bound
+    for (var i = 0; i < sourceData.length; i++) {
+      if (sourceData[i] != null && new Date(sourceData[i].date).valueOf() > startDate.valueOf()) {
+        data.push(Object.create(sourceData[i]));
+      }
+    }
+
   //  console.log(data);
     var graph = new OutlierDetector(data, '2015-01-01', daysToSubtract);
     graph.plotDataPoints();

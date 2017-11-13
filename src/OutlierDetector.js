@@ -32,11 +32,11 @@ class OutlierDetector {
       start: {x: this.xcoord.startDate, y: 0},
       end: {x: this.endDate, y: 0 }
     }
+    d3.select('.viewport').remove();
     this.calculateRegressionEquation(this.data);
     this.calculateSD(this.data);
     this.identifyOutliers(this.data, this.dataSummary.sd);
     this.addViewport();
-    console.log('in here')
   }
 
   /*
