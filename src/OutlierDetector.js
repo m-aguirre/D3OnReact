@@ -1,8 +1,9 @@
 import * as d3 from "d3";
+import DateScale from "./DateScale.js"
 
 
 class OutlierDetector {
-  constructor(data) {
+  constructor(data, currentDate, daysToSubtract) {
     this.data = data;
     this.dataSummary = {
       minClosingValue: d3.min(this.data, (d) => {return d.close}),
@@ -12,34 +13,30 @@ class OutlierDetector {
       intercept: 0,
       regressionCoef: 0
     }
+    this.daysToSubtract = daysToSubtract;
     //controls speed of animation
     this.delayFactor = 8;
+    this.endDate = currentDate;
 
-    //creates linearly spaced scale for x-coordinate
-    this.xScale = d3.scaleTime()
-        .domain([
-          new Date(Date.parse('2014-01-01')),
-          new Date(Date.parse('2015-01-01'))
-        ])
-        .range([0, 600]);
+    this.xcoord = new DateScale(currentDate, daysToSubtract);
+    this.xScale = this.xcoord.xScale;
 
     //creates y scale based on min and max closing prices
     this.yScale = d3.scaleLinear()
         .domain([this.maxYdomain(),this.minYdomain()])
         .range([0,450]);
-
-    this.xAxis = d3.axisBottom(this.xScale).ticks(14);
+    this.xAxis = d3.axisBottom(this.xScale).ticks(this.xcoord.numTicks);
     this.yAxis = d3.axisLeft(this.yScale).ticks(6);
 
     this.line = {
-      start: {x: "2014-01-01", y: 0},
-      end: {x: "2014-12-31", y: 0 }
+      start: {x: this.xcoord.startDate, y: 0},
+      end: {x: this.endDate, y: 0 }
     }
-
     this.calculateRegressionEquation(this.data);
     this.calculateSD(this.data);
     this.identifyOutliers(this.data, this.dataSummary.sd);
     this.addViewport();
+    console.log('in here')
   }
 
   /*
@@ -80,7 +77,7 @@ class OutlierDetector {
       var date = d.date;
       var y = +d.close;
       //number of days between current date and january first - don't ask where 86400000 came from
-      var x = (Math.floor((Date.parse(date) - Date.parse('2014-01-01'))/86400000));
+      var x = (Math.floor((Date.parse(date) - Date.parse(this.xcoord.startDate.toISOString()))/86400000));
       sumX += x;
       sumY += y;
       sumXY += (x * y);
@@ -92,8 +89,8 @@ class OutlierDetector {
     var b1 = ( ((n * sumXY) - (sumX * sumY)) / ((n * sumXSquared) - (sumX * sumX)) );
 
     // x variables
-    var minDateNumeric = d3.min(this.data, (d) => { return Math.floor((Date.parse(d.date) - Date.parse('2014-01-01'))/86400000)});
-    var maxDateNumeric = d3.max(this.data, (d) => { return Math.floor((Date.parse(d.date) - Date.parse('2014-01-01'))/86400000)});
+    var minDateNumeric = d3.min(this.data, (d) => { return Math.floor((Date.parse(d.date) - Date.parse(this.xcoord.startDate.toISOString()))/86400000)});
+    var maxDateNumeric = d3.max(this.data, (d) => { return Math.floor((Date.parse(d.date) - Date.parse(this.xcoord.startDate.toISOString()))/86400000)});
     var startY = b0 + (minDateNumeric * b1);
     var endY = b0 + (maxDateNumeric * b1);
 
@@ -116,17 +113,22 @@ class OutlierDetector {
 
   //adds outlier tag to any stock date that is considered an outlier
   identifyOutliers(data, sigma) {
-    sigma = sigma/2;
+    sigma = sigma;
+    if (this.daysToSubtract === 365) {
+      sigma = sigma * 0.5;
+    }
+    var days = 0;
     data.forEach((d) => {
-      var pointOnLine = ((Math.floor((Date.parse(d.date) - Date.parse('2014-01-01'))/86400000)) * this.dataSummary.regressionCoef) + this.dataSummary.intercept;
+      var pointOnLine = ((Math.floor((Date.parse(d.date) - Date.parse(this.xcoord.startDate.toISOString()))/86400000)) * this.dataSummary.regressionCoef) + this.dataSummary.intercept;
+      //var pointOnLine = (days * this.dataSummary.regressionCoef) + this.dataSummary.intercept;
       if (+d.close > (pointOnLine + sigma) || +d.close < (pointOnLine - sigma)) {
         d.outlier = true;
       }
+      days++;
     });
   }
 
   addViewport() {
-    d3.select('.viewport').remove();
     d3.select('.graph-pane')
       .append('svg')
       .attr('class', 'viewport')
@@ -152,11 +154,11 @@ class OutlierDetector {
   }
 
   plotDataPoints() {
-    var d3ViewPort =  d3.select('.viewport')
-    var svg = d3ViewPort.append('svg')
-    var dots = svg.append('g')
-    var that = this;
-    for (var i = 0; i < this.data.length; i++){
+  var d3ViewPort =  d3.select('.viewport')
+  var svg = d3ViewPort.append('svg')
+  var dots = svg.append('g')
+  var that = this;
+  for (var i = 0; i < this.data.length; i++){
     var data = []
     data.push(this.data[i]);
     dots.append("circle")
@@ -187,8 +189,7 @@ class OutlierDetector {
         }
       setTimeout(() => {this.drawRegressionLine()}, this.millisecondDelay());
       setTimeout(() => {this.colorOutliersRed(this.data)}, this.millisecondDelay() + 750);
-}
-
+  }
 
   drawRegressionLine() {
     d3.select('.viewport')
@@ -215,7 +216,7 @@ class OutlierDetector {
     .style('fill', (d) => { return (d.outlier ? '#ff0202' : '#bcbcbc'); })
   }
 
-  showInfo(outlier) {
+showInfo(outlier) {
   var cx;
   if (outlier.attr('cx') > 350) {
     cx = outlier.attr('cx') - 115;
@@ -225,7 +226,7 @@ class OutlierDetector {
   var d3ViewPort =  d3.select('.viewport')
   var svg = d3ViewPort.append('svg')
   var rect = svg.append('rect')
-  .attr('width', 125)
+  .attr('width', 115)
   .attr('height', 55)
   .attr('class', 'outlier-info-box')
   .attr('x', cx)
@@ -245,14 +246,6 @@ class OutlierDetector {
   .attr("dy", function(d){return +outlier.attr('cy') + 42.5})
   .text("Close: $" + outlier.attr('close').slice(0,5))
   }
-
-}
-
-const render = () => {
-  d3.select('.viewport').remove();
-  var data;// = aaplData;
-  var graph = new OutlierDetector(data);
-  graph.plotDataPoints();
 }
 
 export default OutlierDetector;

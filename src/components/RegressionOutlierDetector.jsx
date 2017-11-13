@@ -12,7 +12,7 @@ class RegressionOutlierDetector extends React.Component {
   show() {
     var data = aaplData.aaplData;
     console.log(data);
-     var graph = new OutlierDetector(data);
+     var graph = new OutlierDetector(data, '2015-01-01', 365);
      graph.plotDataPoints();
   }
 
