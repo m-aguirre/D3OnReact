@@ -11,8 +11,8 @@ body {
 }
 
 .graph-pane {
-  width: 750px;
-  height: 500px;
+  width: 100vw;
+  height: 75vh;
   margin: auto;
   overflow: visible;
   padding-left: 20px;
@@ -20,7 +20,7 @@ body {
 
 
 .stock-description  {
-    width: 400px;
+    width: 100vw;
     height: auto;
     display: inline-block;
     text-align: center;
@@ -32,16 +32,7 @@ body {
   float: left;
   margin-left: 20px;
 }
-.animate-button {
-  position: relative;
-  margin-top: 15px;
-  display: inline-block;
-  background-color: #41a6f4;
-  color: white;
-  width: 100px;
-  height: 45px;
-  border-radius: 5px;
-}
+
 .viewport {
   margin-left: 10%;
   overflow: visible;
@@ -60,15 +51,26 @@ body {
 }
 
 .time-interval-button-container {
-  display: flex;
+  width: 70vw !important;
+  height: auto;
+  display: inline-flex;
   margin: 0;
-  margin-right: 50%;
+
 }
 
 .time-interval-button {
-  width: 10vw;
+
+  min-width: 10vw;
   height: 5vh;
-  background-color: purple;
+  background-color: #41a6f4;
+  color: white;
   border-radius: 5px;
-  margin: 10%;
+  border-style: double;
+  margin: 3%;
+  align-items: center;
+  line-height: 2.5vh;
+  text-align: center;
+}
+.time-interval-button p {
+  transform: translate(0, -50%);
 }

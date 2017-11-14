@@ -37,11 +37,10 @@ class RegressionOutlierDetector extends React.Component {
     return (
 
       <div className="time-interval-button-container">
-        <button className="animate-button" onClick={ () => {this.show(365)}}>Identify Outliers</button>
-        <div className="time-interval-button" onClick={ () => {this.show(30)}}>1M</div>
-        <div className="time-interval-button" onClick={ () => {this.show(90)}}>3M</div>
-        <div className="time-interval-button" onClick={ () => {this.show(180)}}>6M</div>
-        <div className="time-interval-button" onClick={ () => {this.show(365)}}>1Y</div>
+        <div className="time-interval-button" onClick={ () => {this.show(30)}}><p>1M</p></div>
+        <div className="time-interval-button" onClick={ () => {this.show(90)}}><p>3M</p></div>
+        <div className="time-interval-button" onClick={ () => {this.show(180)}}><p>6M</p></div>
+        <div className="time-interval-button" onClick={ () => {this.show(365)}}><p>1Y</p></div>
       </div>
 
 
