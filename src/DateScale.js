@@ -25,7 +25,7 @@ class DateScale {
   findNumberOfTicks(daysToSubtract) {
       switch(daysToSubtract) {
         case 30:
-          return 4;
+          return 6;
         case 60:
           return 8;
         case 180:

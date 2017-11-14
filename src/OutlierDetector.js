@@ -1,7 +1,6 @@
 import * as d3 from "d3";
 import DateScale from "./DateScale.js"
 
-
 class OutlierDetector {
   constructor(data, currentDate, daysToSubtract) {
     this.data = data;

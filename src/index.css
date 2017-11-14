@@ -58,3 +58,17 @@ body {
   color: red;
   font-size: 14px;
 }
+
+.time-interval-button-container {
+  display: flex;
+  margin: 0;
+  margin-right: 50%;
+}
+
+.time-interval-button {
+  width: 10vw;
+  height: 5vh;
+  background-color: purple;
+  border-radius: 5px;
+  margin: 10%;
+}
