@@ -221,11 +221,11 @@ showInfo(outlier) {
     cx = outlier.attr('cx') - 115;
   } else {
     cx = outlier.attr('cx');
-  }
+ }
   var d3ViewPort =  d3.select('.viewport')
   var svg = d3ViewPort.append('svg')
   var rect = svg.append('rect')
-  .attr('width', 115)
+  .attr('width', 125)
   .attr('height', 55)
   .attr('class', 'outlier-info-box')
   .attr('x', cx)
@@ -245,6 +245,7 @@ showInfo(outlier) {
   .attr("dy", function(d){return +outlier.attr('cy') + 42.5})
   .text("Close: $" + outlier.attr('close').slice(0,5))
   }
+
 }
 
 export default OutlierDetector;

@@ -28,7 +28,6 @@ class RegressionOutlierDetector extends React.Component {
       }
     }
 
-  //  console.log(data);
     var graph = new OutlierDetector(data, '2015-01-01', daysToSubtract);
     graph.plotDataPoints();
   }
@@ -37,13 +36,11 @@ class RegressionOutlierDetector extends React.Component {
     return (
 
       <div className="time-interval-button-container">
-        <div className="time-interval-button" onClick={ () => {this.show(30)}}><p>1M</p></div>
+        <div className="time-interval-button" onClick={ () => {this.show(60)}}><p>2M</p></div>
         <div className="time-interval-button" onClick={ () => {this.show(90)}}><p>3M</p></div>
         <div className="time-interval-button" onClick={ () => {this.show(180)}}><p>6M</p></div>
         <div className="time-interval-button" onClick={ () => {this.show(365)}}><p>1Y</p></div>
       </div>
-
-
 
     )
   }
