@@ -79,3 +79,9 @@ body {
 .time-interval-button p {
   transform: translate(0, -50%);
 }
+
+.bollinger-container {
+  width: 900px;
+  height: 450px;
+
+}

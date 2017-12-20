@@ -5,6 +5,7 @@ import './App.css';
 import OutlierDetector from './OutlierDetector.js';
 import aaplData from './dataFile.js';
 import RegressionOutlierDetector from './components/RegressionOutlierDetector.jsx';
+import BollingerBandsRenderer from './components/BollingerBandsRenderer.jsx';
 
 class App extends Component {
 
@@ -49,6 +50,8 @@ class App extends Component {
             visit <a href='http://www.investopedia.com/articles/trading/09/linear-regression-time-price.asp'>investopedia</a>
           </p>
         </div>
+
+        <BollingerBandsRenderer />
       </div>
     );
   }
