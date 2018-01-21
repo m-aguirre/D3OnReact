@@ -75,9 +75,20 @@ class BollingerBands {
        .x((d) => { console.log(d); return this.xScale(Date.parse(d.date))})
        .y((d) => {return this.yScale(d.close)})
 
-    svg.append("path")
-     .attr("class", "line")
-      .attr("d", line(data))
+    // svg.append("path")
+    //  .attr("class", "line")
+    //   .attr("d", line(data))
+
+      svg.append("path")
+        .datum(data)
+        .attr("fill", "none")
+        .attr("stroke", "steelblue")
+        .attr("stroke-linejoin", "round")
+        .attr("stroke-linecap", "round")
+        .attr("stroke-width", 1.5)
+        .attr("d", line(data))
+        .transition()
+        .duration(500)
   }
   // draw(data) {
   //   svg.append("path")
