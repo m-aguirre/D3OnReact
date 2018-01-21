@@ -32,6 +32,7 @@ class BollingerBands {
 
     this.addViewport()
     this.placeLine(this.data)
+    this.rollingMean(this.data, 7)
 
   }
   maxYdomain() {
@@ -72,12 +73,8 @@ class BollingerBands {
     var svg = d3ViewPort.append('svg')
 
      var line = d3.line()
-       .x((d) => { console.log(d); return this.xScale(Date.parse(d.date))})
-       .y((d) => {return this.yScale(d.close)})
-
-    // svg.append("path")
-    //  .attr("class", "line")
-    //   .attr("d", line(data))
+       .x((d) => { return this.xScale(Date.parse(d.date))})
+       .y((d) => { return this.yScale(d.close)})
 
       svg.append("path")
         .datum(data)
@@ -95,6 +92,23 @@ class BollingerBands {
   //       .attr("class", "line")
   //       .attr("d", placeLine(data));
   // }
+
+  rollingMean(data, nDays) {
+
+    var rollingMeanData = data;
+    var rollingStorage = [];
+    for (let i = 0; i < data.length; i++) {
+      rollingStorage.push(i);
+      if (i >= nDays) {
+        rollingStorage.shift();
+        var sum = rollingStorage.reduce( (sum,val) => {return sum + val}, 0)
+        var mean = sum / nDays
+        rollingMeanData[i]['close'] = mean;
+      } else {
+        rollingMeanData[i]['close'] = -1000;
+      }
+    }
+  }
 }
 
 export default BollingerBands;
