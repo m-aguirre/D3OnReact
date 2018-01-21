@@ -31,6 +31,7 @@ class BollingerBands {
 
 
     this.addViewport()
+    this.placeLine(this.data)
 
   }
   maxYdomain() {
@@ -42,7 +43,7 @@ class BollingerBands {
   }
 
   addViewport() {
-    d3.select('.graph-pane')
+    d3.select('.bollinger-container')
       .append('svg')
       .attr('class', 'viewport')
       .attr('width', 700)
@@ -66,6 +67,23 @@ class BollingerBands {
     .call(this.yAxis)
   }
 
+  placeLine(data) {
+    var d3ViewPort = d3.select('.viewport')
+    var svg = d3ViewPort.append('svg')
+
+     var line = d3.line()
+       .x((d) => { console.log(d); return this.xScale(Date.parse(d.date))})
+       .y((d) => {return this.yScale(d.close)})
+
+    svg.append("path")
+     .attr("class", "line")
+      .attr("d", line(data))
+  }
+  // draw(data) {
+  //   svg.append("path")
+  //       .attr("class", "line")
+  //       .attr("d", placeLine(data));
+  // }
 }
 
 export default BollingerBands;

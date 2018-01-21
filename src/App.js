@@ -52,6 +52,7 @@ class App extends Component {
         </div>
 
         <BollingerBandsRenderer />
+        <div className="bb-pane"></div>
       </div>
     );
   }

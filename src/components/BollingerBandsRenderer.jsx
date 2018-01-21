@@ -29,7 +29,7 @@ class BollingerBandsRenderer extends React.Component {
       }
     }
 
-    var graph = new BollingerBands(data, '2015-01-01', daysToSubtract);
+    var graph = new BollingerBands(sourceData, '2015-01-01', daysToSubtract);
   //  graph.plotDataPoints();
   }
   render() {
