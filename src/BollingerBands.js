@@ -32,7 +32,8 @@ class BollingerBands {
 
     this.addViewport()
     this.placeLine(this.data)
-    this.rollingMean(this.data, 7)
+    this.rollingMeanData = this.rollingMean(this.data, 7)
+    this.placeLine(this.rollingMeanData)
 
   }
   maxYdomain() {
@@ -98,16 +99,18 @@ class BollingerBands {
     var rollingMeanData = data;
     var rollingStorage = [];
     for (let i = 0; i < data.length; i++) {
-      rollingStorage.push(i);
+
+      rollingStorage.push(data[i]['close']);
       if (i >= nDays) {
         rollingStorage.shift();
-        var sum = rollingStorage.reduce( (sum,val) => {return sum + val}, 0)
+        var sum = rollingStorage.reduce( (sum,val) =>  {return  sum + val}, 0)
         var mean = sum / nDays
         rollingMeanData[i]['close'] = mean;
       } else {
-        rollingMeanData[i]['close'] = -1000;
+        rollingMeanData.shift();
       }
     }
+    return rollingMeanData;
   }
 }
 
