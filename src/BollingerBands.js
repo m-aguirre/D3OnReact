@@ -1,6 +1,6 @@
 import * as d3 from "d3";
 import DateScale from "./DateScale.js"
-
+import Line from "./Line.js"
 
 class BollingerBands {
   constructor(data, currentDate, daysToSubtract) {
@@ -36,7 +36,10 @@ class BollingerBands {
     this.placeLine(this.data)
     this.rollingMeanData = this.rollingMean(this.data, 7)
     this.placeLine(this.rollingMeanData, 'rolling')
+  //  new Line(this.rollingMeanData, 'rolling', this.xScale, this.yScale)
+    this.createBand()
     this.placeLine(this.upperBand, 'upper')
+    //this.placeLine(this.lowerBand, 'lower')
 
   }
   maxYdomain() {
@@ -88,7 +91,7 @@ class BollingerBands {
         lineColor = 'steelblue'
     }
     var d3ViewPort = d3.select('.viewport')
-    var svg = d3ViewPort.append('svg')
+    var svg = d3ViewPort.insert('svg')
 
      var line = d3.line()
        .x((d) => { return this.xScale(Date.parse(d.date))})
@@ -120,29 +123,44 @@ class BollingerBands {
 
   rollingMean(data, nDays) {
 
-    var rollingMeanData = data;
-    var upperBand = this.upperBand;
-    var lowerBand = this.lowerBand;
+    var rollingMeanData = data.slice();
+    var upperBand = this.upperBand.slice();
+    var lowerBand = this.lowerBand.slice();
     var rollingStorage = [];
-    for (let i = 0; i < data.length; i++) {
-
-      rollingStorage.push(data[i]['close']);
+    console.log(rollingMeanData)
+    for (let i = 0; i < data.length - nDays; i++) {
+      rollingStorage.push(rollingMeanData[i]['close']);
       if (i >= nDays) {
         rollingStorage.shift();
         var sum = rollingStorage.reduce( (sum,val) =>  {return  sum + val}, 0)
         var mean = sum / nDays
         rollingMeanData[i]['close'] = mean;
-        upperBand[i]['close'] = mean + 2 * this.calculateSD(rollingStorage, mean);
+        rollingMeanData[i]['rollingSD'] = this.calculateSD(rollingStorage, mean);
+        //upperBand[i]['close'] = mean + (2 * this.calculateSD(rollingStorage, mean));
+        // lowerBand[i]['close'] = mean - (2 * this.calculateSD(rollingStorage, mean));
       } else {
         rollingMeanData.shift();
         upperBand.shift();
-        lowerBand.shift();
+      //  lowerBand.shift();
       }
     }
-    console.log(upperBand)
+//    console.log(upperBand)
     this.upperBand = upperBand;
+//    this.lowerBand = lowerBand;
     return rollingMeanData;
   }
+  createBand() {
+    var upperBand = this.rollingMeanData.slice();
+    for (let i = 0; i < upperBand.length; i++) {
+      if (upperBand[i]['rollingSD']) {
+        upperBand[i]['close'] = upperBand[i]['close'] + (2 * upperBand[i]['rollingSD']);
+      }
+      //upperBand[i]['close'] = mean + (2 * this.calculateSD(rollingStorage, mean));
+      // lowerBand[i]['close'] = mean - (2 * this.calculateSD(rollingStorage, mean));
+    }
+    this.upperBand = upperBand;
+  }
+
 }
 
 export default BollingerBands;
