@@ -39,7 +39,8 @@ class BollingerBands {
   //  new Line(this.rollingMeanData, 'rolling', this.xScale, this.yScale)
     this.createBand()
     this.placeLine(this.upperBand, 'upper')
-    //this.placeLine(this.lowerBand, 'lower')
+    this.createLowerBand()
+    this.placeLine(this.lowerBand, 'lower')
 
   }
   maxYdomain() {
@@ -151,16 +152,31 @@ class BollingerBands {
   }
   createBand() {
     var upperBand = this.rollingMeanData.slice();
+  //  var lowerBand = this.rollingMeanData.slice();
     for (let i = 0; i < upperBand.length; i++) {
       if (upperBand[i]['rollingSD']) {
         upperBand[i]['close'] = upperBand[i]['close'] + (2 * upperBand[i]['rollingSD']);
+    //    lowerBand[i]['close'] = lowerBand[i]['close'] - (2 * lowerBand[i]['rollingSD']);
       }
       //upperBand[i]['close'] = mean + (2 * this.calculateSD(rollingStorage, mean));
       // lowerBand[i]['close'] = mean - (2 * this.calculateSD(rollingStorage, mean));
     }
     this.upperBand = upperBand;
+  //  this.lowerBand = lowerBand;
   }
-
+  createLowerBand() {
+    var lowerBand = this.rollingMeanData.slice();
+  //  var lowerBand = this.rollingMeanData.slice();
+    for (let i = 0; i < lowerBand.length; i++) {
+      if (lowerBand[i]['rollingSD']) {
+        lowerBand[i]['close'] = lowerBand[i]['close'] - (4 * lowerBand[i]['rollingSD']);
+    //    lowerBand[i]['close'] = lowerBand[i]['close'] - (2 * lowerBand[i]['rollingSD']);
+      }
+      //upperBand[i]['close'] = mean + (2 * this.calculateSD(rollingStorage, mean));
+      // lowerBand[i]['close'] = mean - (2 * this.calculateSD(rollingStorage, mean));
+    }
+    this.lowerBand = lowerBand;
+  }
 }
 
 export default BollingerBands;
