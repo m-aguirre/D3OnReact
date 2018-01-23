@@ -37,7 +37,7 @@ class BollingerBands {
     this.rollingMeanData = this.rollingMean(this.data, 7)
     this.placeLine(this.rollingMeanData, 'rolling')
   //  new Line(this.rollingMeanData, 'rolling', this.xScale, this.yScale)
-    this.createBand()
+    this.createBands()
     this.placeLine(this.upperBand, 'upper')
   //  this.createLowerBand()
     this.placeLine(this.lowerBand, 'lower')
@@ -123,12 +123,8 @@ class BollingerBands {
   }
 
   rollingMean(data, nDays) {
-
     var rollingMeanData = data.slice();
-    var upperBand = this.upperBand.slice();
-    var lowerBand = this.lowerBand.slice();
     var rollingStorage = [];
-    console.log(rollingMeanData)
     for (let i = 0; i < data.length - nDays; i++) {
       rollingStorage.push(rollingMeanData[i]['close']);
       if (i >= nDays) {
@@ -137,48 +133,22 @@ class BollingerBands {
         var mean = sum / nDays
         rollingMeanData[i]['close'] = mean;
         rollingMeanData[i]['rollingSD'] = this.calculateSD(rollingStorage, mean);
-        //upperBand[i]['close'] = mean + (2 * this.calculateSD(rollingStorage, mean));
-        // lowerBand[i]['close'] = mean - (2 * this.calculateSD(rollingStorage, mean));
       } else {
         rollingMeanData.shift();
-        upperBand.shift();
-      //  lowerBand.shift();
       }
     }
-//    console.log(upperBand)
-    this.upperBand = upperBand;
-//    this.lowerBand = lowerBand;
     return rollingMeanData;
   }
-  createBand() {
-    //var upperBand = this.rollingMeanData.slice();
+  createBands() {
     var upperBand = this.rollingMeanData.map(a => Object.assign({}, a));
     var lowerBand = this.rollingMeanData.map(a => Object.assign({}, a));
-  //  var lowerBand = this.rollingMeanData.slice();
     for (let i = 0; i < upperBand.length; i++) {
       if (upperBand[i]['rollingSD']) {
         upperBand[i]['close'] = upperBand[i]['close'] + (2 * upperBand[i]['rollingSD']);
         lowerBand[i]['close'] = lowerBand[i]['close'] - (2 * lowerBand[i]['rollingSD']);
-    //    lowerBand[i]['close'] = lowerBand[i]['close'] - (2 * lowerBand[i]['rollingSD']);
       }
-      //upperBand[i]['close'] = mean + (2 * this.calculateSD(rollingStorage, mean));
-      // lowerBand[i]['close'] = mean - (2 * this.calculateSD(rollingStorage, mean));
     }
     this.upperBand = upperBand;
-    this.lowerBand = lowerBand;
-  //  this.lowerBand = lowerBand;
-  }
-  createLowerBand() {
-    var lowerBand = this.rollingMeanData.slice();
-  //  var lowerBand = this.rollingMeanData.slice();
-    for (let i = 0; i < lowerBand.length; i++) {
-      if (lowerBand[i]['rollingSD']) {
-        lowerBand[i]['close'] = lowerBand[i]['close'] - (2 * lowerBand[i]['rollingSD']);
-    //    lowerBand[i]['close'] = lowerBand[i]['close'] - (2 * lowerBand[i]['rollingSD']);
-      }
-      //upperBand[i]['close'] = mean + (2 * this.calculateSD(rollingStorage, mean));
-      // lowerBand[i]['close'] = mean - (2 * this.calculateSD(rollingStorage, mean));
-    }
     this.lowerBand = lowerBand;
   }
 }
