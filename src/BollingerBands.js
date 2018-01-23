@@ -33,14 +33,14 @@ class BollingerBands {
     this.lowerBand = data;
 
     this.addViewport()
-    this.placeLine(this.data)
     this.rollingMeanData = this.rollingMean(this.data, 7)
     this.placeLine(this.rollingMeanData, 'rolling')
   //  new Line(this.rollingMeanData, 'rolling', this.xScale, this.yScale)
     this.createBands()
-    this.placeLine(this.upperBand, 'upper')
+    this.placeLine(this.upperBand, 'bband')
   //  this.createLowerBand()
-    this.placeLine(this.lowerBand, 'lower')
+    this.placeLine(this.lowerBand, 'bband')
+    this.placeLine(this.data)
 
   }
   maxYdomain() {
@@ -80,16 +80,16 @@ class BollingerBands {
     var lineColor;
     switch(type) {
       case "rolling":
-        lineColor = 'red'
+        lineColor = '#d9dbe2'
         break;
-      case "upper":
-        lineColor = 'purple'
+      case "bband":
+        lineColor = '#1d3bc1'
         break;
       case "lower":
         lineColor = 'green'
         break;
       default:
-        lineColor = 'steelblue'
+        lineColor = 'black'
     }
     var d3ViewPort = d3.select('.viewport')
     var svg = d3ViewPort.insert('svg')
@@ -104,7 +104,7 @@ class BollingerBands {
         .attr("stroke", lineColor)
         .attr("stroke-linejoin", "round")
         .attr("stroke-linecap", "round")
-        .attr("stroke-width", 1.5)
+        .attr("stroke-width", 2.5)
         .attr("d", line(data))
         .transition()
         .duration(500)
@@ -123,7 +123,7 @@ class BollingerBands {
   }
 
   rollingMean(data, nDays) {
-    var rollingMeanData = data.slice();
+    var rollingMeanData = data.map(a => Object.assign({}, a));
     var rollingStorage = [];
     for (let i = 0; i < data.length - nDays; i++) {
       rollingStorage.push(rollingMeanData[i]['close']);
