@@ -35,10 +35,8 @@ class BollingerBands {
     this.addViewport()
     this.rollingMeanData = this.rollingMean(this.data, 7)
     this.placeLine(this.rollingMeanData, 'rolling')
-  //  new Line(this.rollingMeanData, 'rolling', this.xScale, this.yScale)
     this.createBands()
     this.placeLine(this.upperBand, 'bband')
-  //  this.createLowerBand()
     this.placeLine(this.lowerBand, 'bband')
     this.placeLine(this.data)
 
@@ -78,12 +76,15 @@ class BollingerBands {
 
   placeLine(data, type) {
     var lineColor;
+    var opacity = 0;
+    var duration = 0;
     switch(type) {
       case "rolling":
         lineColor = '#d9dbe2'
         break;
       case "bband":
         lineColor = '#1d3bc1'
+        duration  = 1500
         break;
       case "lower":
         lineColor = 'green'
@@ -106,14 +107,11 @@ class BollingerBands {
         .attr("stroke-linecap", "round")
         .attr("stroke-width", 2.5)
         .attr("d", line(data))
+        .style('opacity', 0)
         .transition()
-        .duration(500)
+        .duration(duration)
+        .style('opacity', 1)
   }
-  // draw(data) {
-  //   svg.append("path")
-  //       .attr("class", "line")
-  //       .attr("d", placeLine(data));
-  // }
 
   calculateSD(data, mean) {
     var sumSquares = data.reduce( (sum, d) => {
