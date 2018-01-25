@@ -4,6 +4,7 @@ import DateScale from "./DateScale.js"
 class OutlierDetector {
   constructor(data, currentDate, daysToSubtract) {
     this.data = data;
+    this.dataCopy = data.map(a => Object.assign({}, a));
     this.dataSummary = {
       minClosingValue: d3.min(this.data, (d) => {return d.close}),
       maxClosingValue: d3.max(this.data, (d) => {return d.close}),
@@ -153,41 +154,79 @@ class OutlierDetector {
   }
 
   plotDataPoints() {
+
+    var line = d3.line()
+      .x((d) => { return this.xScale(Date.parse(d.date))})
+      .y((d) => { return this.yScale(d.close)})
+
+
   var d3ViewPort =  d3.select('.viewport')
   var svg = d3ViewPort.append('svg')
-  var dots = svg.append('g')
-  var that = this;
-  for (var i = 0; i < this.data.length; i++){
-    var data = []
-    data.push(this.data[i]);
-    dots.append("circle")
-      .data(data)
-      .attr("r", 0)
-      .attr("cx", (d) => { return this.xScale(Date.parse(d.date)) })
-      .attr("cy", (d) => { return this.yScale(d.close) })
-      .attr('close', data[0].close)
-      .attr('date', data[0].date)
-      .attr('outlier', (d) => { return (d.outlier ? true : false)})
-      .on('mouseenter', function() {
-        var dataPoint = d3.select(this);
-        if (dataPoint.attr('outlier') === 'true') {
-          that.showInfo(dataPoint);
-          }
-        })
-        .on("mouseout", function() {
-            d3.select('.viewport')
-            .selectAll('rect').remove()
-            d3.select('.viewport')
-            .selectAll('.outlier-data').remove()
-      })
-      .style('stroke', 'black')
-      .style('fill', 'white')
+
+  // var line = d3.line()
+  //   .x((d) => { return this.xScale(Date.parse(d.date))})
+  //   .y((d) => { return this.yScale(d.close)})
+  console.log(this.dataCopy)
+  var path = svg.append("path")
+     .datum(this.dataCopy)
+     .attr("id", "myLine")
+     .attr("fill", "none")
+     .attr("stroke", "red")
+     .attr("stroke-linejoin", "round")
+     .attr("stroke-linecap", "round")
+     .attr("stroke-width", 2.5)
+     .attr("d", line(this.dataCopy))
+
+     var totalLength = path.node().getTotalLength();
+     console.log(totalLength);
+
+     d3.select("#myLine")
+      .attr("stroke-dasharray", totalLength + " " + totalLength )
+      .attr("stroke-dashoffset", totalLength)
       .transition()
-      .delay(this.delayFactor * i)
-      .attr("r", 3.5)
-        }
-      setTimeout(() => {this.drawRegressionLine()}, this.millisecondDelay());
-      setTimeout(() => {this.colorOutliersRed(this.data)}, this.millisecondDelay() + 750);
+      .ease(d3.easeLinear)
+      .duration(3000)
+      .attr("stroke-dashoffset", 0)
+      .style('opacity', 1)
+      .transition()
+      .duration(1500)
+      .style('opacity', 0)
+      .remove()
+    //  d3.select("myLine").remove()
+      setTimeout(()=> {this.plotDataPoints()}, 5000)
+  // var dots = svg.append('g')
+  // var that = this;
+  // for (var i = 0; i < this.data.length; i++){
+  //   var data = []
+  //   data.push(this.data[i]);
+  //   dots.append("circle")
+  //     .data(data)
+  //     .attr("r", 0)
+  //     .attr("cx", (d) => { return this.xScale(Date.parse(d.date)) })
+  //     .attr("cy", (d) => { return this.yScale(d.close) })
+  //     .attr('close', data[0].close)
+  //     .attr('date', data[0].date)
+  //     .attr('outlier', (d) => { return (d.outlier ? true : false)})
+  //     .on('mouseenter', function() {
+  //       var dataPoint = d3.select(this);
+  //       if (dataPoint.attr('outlier') === 'true') {
+  //         that.showInfo(dataPoint);
+  //         }
+  //       })
+  //       .on("mouseout", function() {
+  //           d3.select('.viewport')
+  //           .selectAll('rect').remove()
+  //           d3.select('.viewport')
+  //           .selectAll('.outlier-data').remove()
+  //     })
+  //     .style('stroke', 'black')
+  //     .style('fill', 'white')
+  //     .transition()
+  //     .delay(this.delayFactor * i)
+  //     .attr("r", 3.5)
+  //       }
+  //    setTimeout(() => {this.drawRegressionLine()}, this.millisecondDelay());
+  //    setTimeout(() => {this.colorOutliersRed(this.data)}, this.millisecondDelay() + 750);
   }
 
   drawRegressionLine() {
